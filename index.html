@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beda Group — Insurance Quote</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#0f1f45;
+  --navy2:#1a2f5e;
+  --gold:#c9a84c;
+  --gold2:#e8c96a;
+  --bg:#f4f4f0;
+  --card:#fff;
+  --border:#e0dfd8;
+  --text:#1a1a2e;
+  --muted:#666;
+  --light:#f8f7f3;
+}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);min-height:100vh;padding:0 0 3rem;}
+
+/* HEADER */
+.header{background:var(--navy);padding:1.25rem 1rem 1rem;text-align:center;position:relative;}
+.header-inner{max-width:600px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-icon{width:42px;height:42px;border-radius:8px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.brand-text h1{font-size:16px;font-weight:700;color:#fff;letter-spacing:0.02em;}
+.brand-text p{font-size:11px;color:rgba(255,255,255,0.55);margin-top:1px;}
+
+/* LANG SWITCHER */
+.lang-bar{display:flex;gap:4px;background:rgba(255,255,255,0.1);border-radius:8px;padding:3px;}
+.lang-btn{padding:5px 10px;font-size:12px;font-weight:600;border:none;border-radius:6px;cursor:pointer;background:transparent;color:rgba(255,255,255,0.6);transition:all 0.15s;font-family:inherit;}
+.lang-btn.active{background:var(--gold);color:var(--navy);}
+
+/* GOLD STRIPE */
+.stripe{height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));}
+
+/* MAIN */
+.wrap{max-width:600px;margin:0 auto;padding:1.25rem 1rem 0;}
+
+.tip-box{background:#fff;border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
+.tip-box strong{color:var(--navy);}
+
+.section{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:12px;}
+.sec-head{display:flex;align-items:center;gap:9px;padding:10px 16px;background:var(--navy);border-bottom:2px solid var(--gold);}
+.sec-head .icon{font-size:15px;}
+.sec-head span{font-size:11px;font-weight:700;color:rgba(255,255,255,0.9);text-transform:uppercase;letter-spacing:0.07em;}
+.sec-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+
+.row{display:grid;gap:10px;}
+.r2{grid-template-columns:1fr 1fr;}
+.r3{grid-template-columns:1fr 1fr 1fr;}
+
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;}
+.field input,.field select,.field textarea{
+  font-family:inherit;font-size:14px;padding:8px 10px;
+  border:1px solid var(--border);border-radius:8px;
+  background:#fff;color:var(--text);width:100%;outline:none;
+  transition:border-color 0.15s,box-shadow 0.15s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,31,69,0.08);
+}
+.field textarea{resize:none;line-height:1.5;}
+
+.btn{
+  width:100%;padding:13px;font-family:inherit;font-size:15px;font-weight:700;
+  color:var(--navy);background:var(--gold);border:none;border-radius:10px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:4px;transition:background 0.15s,transform 0.1s;
+  letter-spacing:0.01em;
+}
+.btn:hover{background:var(--gold2);}
+.btn:active{transform:scale(0.99);}
+
+.copied{text-align:center;font-size:13px;color:green;margin-top:8px;display:none;font-weight:600;}
+
+.footer{text-align:center;font-size:11px;color:#aaa;margin-top:1.5rem;padding-bottom:1rem;}
+
+@media(max-width:480px){.r2,.r3{grid-template-columns:1fr;}.header-inner{flex-wrap:wrap;justify-content:center;}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-icon">🚐</div>
+      <div class="brand-text">
+        <h1>BEDA GROUP LTD</h1>
+        <p data-t="subtitle">Vehicle Insurance Quote Request</p>
+      </div>
+    </div>
+    <div class="lang-bar">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('pt')">PT</button>
+      <button class="lang-btn" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
+</div>
+<div class="stripe"></div>
+
+<div class="wrap">
+
+  <div class="tip-box">
+    <span data-t="tip"></span>
+  </div>
+
+  <!-- PERSONAL -->
+  <div class="section">
+    <div class="sec-head"><span class="icon">👤</span><span data-t="sec_personal"></span></div>
+    <div class="sec-body">
+      <div class="row r2">
+        <div class="field"><label data-t="lbl_name"></label><input type="text" id="name" data-ph="ph_name"></div>
+        <div class="field"><label data-t="lbl_dob"></label><input type="date" id="dob"></div>
+      </div>
+      <div class="field"><label data-t="lbl_address"></label><input type="text" id="address" data-ph="ph_address"></div>
+      <div class="row r2">
+        <div class="field"><label data-t="lbl_nationality"></label>
+          <select id="nationality">
+            <option value="British">🇬🇧 British</option>
+            <option value="Brazilian">🇧🇷 Brazilian</option>
+            <option value="Portuguese">🇵🇹 Portuguese</option>
+            <option value="Spanish">🇪🇸 Spanish</option>
+            <option value="Polish">🇵🇱 Polish</option>
+            <option value="Romanian">🇷🇴 Romanian</option>
+            <option value="Indian">🇮🇳 Indian</option>
+            <option value="Pakistani">🇵🇰 Pakistani</option>
+            <option value="Other EU">🇪🇺 Other EU</option>
+            <option value="Other">🌍 Other</option>
+          </select>
+        </div>
+        <div class="field"><label data-t="lbl_occupation"></label><input type="text" id="occupation" data-ph="ph_occupation"></div>
+      </div>
+      <div class="row r3">
+        <div class="field"><label data-t="lbl_licdate"></label><input type="date" id="licdate"></div>
+        <div class="field">
+          <label data-t="lbl_loccountry"></label>
+          <select id="loccountry">
+            <option value="UK">🇬🇧 United Kingdom</option>
+            <option value="Brazil">🇧🇷 Brazil</option>
+            <option value="Portugal">🇵🇹 Portugal</option>
+            <option value="Spain">🇪🇸 Spain</option>
+            <option value="Poland">🇵🇱 Poland</option>
+            <option value="Romania">🇷🇴 Romania</option>
+            <option value="Other EU">🇪🇺 Other EU</option>
+            <option value="Other">🌍 Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-t="lbl_lictype"></label>
+          <select id="lictype">
+            <option value="Full UK">Full UK</option>
+            <option value="Provisional UK">Provisional UK</option>
+            <option value="EU / EEA">EU / EEA</option>
+            <option value="International">International</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VEHICLE -->
+  <div class="section">
+    <div class="sec-head"><span class="icon">🚗</span><span data-t="sec_vehicle"></span></div>
+    <div class="sec-body">
+      <div class="row r3">
+        <div class="field"><label data-t="lbl_make"></label><input type="text" id="make" data-ph="ph_make"></div>
+        <div class="field"><label data-t="lbl_model"></label><input type="text" id="model" data-ph="ph_model"></div>
+        <div class="field"><label data-t="lbl_year"></label><input type="number" id="year" placeholder="2019" min="1990" max="2026"></div>
+      </div>
+      <div class="row r2">
+        <div class="field"><label data-t="lbl_plate"></label><input type="text" id="plate" placeholder="AB19 XYZ"></div>
+        <div class="field">
+          <label data-t="lbl_use"></label>
+          <select id="use">
+            <option data-t="use_social" value="Social / Domestic"></option>
+            <option data-t="use_commute" value="Commuting"></option>
+            <option data-t="use_biz" value="Business use"></option>
+            <option data-t="use_courier" value="Courier / Delivery" selected></option>
+            <option data-t="use_hr" value="Hire & Reward"></option>
+          </select>
+        </div>
+      </div>
+      <div class="row r2">
+        <div class="field">
+          <label data-t="lbl_cover"></label>
+          <select id="cover">
+            <option data-t="cov_comp" value="Comprehensive" selected></option>
+            <option data-t="cov_tpft" value="Third Party Fire & Theft"></option>
+            <option data-t="cov_tpo" value="Third Party Only"></option>
+          </select>
+        </div>
+        <div class="field"><label data-t="lbl_mileage"></label><input type="number" id="mileage" data-ph="ph_mileage"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="section">
+    <div class="sec-head"><span class="icon">📊</span><span data-t="sec_history"></span></div>
+    <div class="sec-body">
+      <div class="row r3">
+        <div class="field">
+          <label data-t="lbl_ncb"></label>
+          <select id="ncb">
+            <option value="0 years NCB">0</option>
+            <option value="1 year NCB">1</option>
+            <option value="2 years NCB">2</option>
+            <option value="3 years NCB">3</option>
+            <option value="4 years NCB">4</option>
+            <option value="5+ years NCB">5+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-t="lbl_accidents"></label>
+          <select id="accidents">
+            <option data-t="acc_0" value="No accidents in last 5 years"></option>
+            <option data-t="acc_1" value="1 accident in last 5 years"></option>
+            <option data-t="acc_2" value="2 accidents in last 5 years"></option>
+            <option data-t="acc_3" value="3+ accidents in last 5 years"></option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-t="lbl_points"></label>
+          <select id="points">
+            <option data-t="pts_0" value="No points or convictions"></option>
+            <option value="1–3 points">1–3 pts</option>
+            <option value="4–6 points">4–6 pts</option>
+            <option value="7–9 points">7–9 pts</option>
+            <option data-t="pts_9" value="9+ points or conviction"></option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label data-t="lbl_notes"></label>
+        <textarea id="notes" rows="2" data-ph="ph_notes"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn" onclick="copyToClipboard()">
+    📋 <span data-t="btn_copy"></span>
+  </button>
+  <p class="copied" id="copied" data-t="copied_msg"></p>
+
+  <div class="footer">Beda Group Ltd · Insurance Consultancy · London UK</div>
+</div>
+
+<script>
+const T = {
+  en: {
+    subtitle:"Vehicle Insurance Quote Request",
+    tip:"<strong>💡 Tip:</strong> Have the client's driving licence ready — most fields can be filled in seconds.",
+    sec_personal:"Personal Details",
+    sec_vehicle:"Vehicle Details",
+    sec_history:"Driving History",
+    lbl_name:"Full Name",lbl_dob:"Date of Birth",lbl_address:"Full Address (with postcode)",
+    lbl_nationality:"Nationality / Origin",lbl_occupation:"Occupation",
+    lbl_licdate:"Licence Issue Date",lbl_loccountry:"Licence Country",lbl_lictype:"Licence Type",
+    lbl_make:"Make",lbl_model:"Model",lbl_year:"Year",lbl_plate:"Registration Plate",
+    lbl_use:"Vehicle Use",lbl_cover:"Cover Type",lbl_mileage:"Est. Annual Mileage",
+    lbl_ncb:"No Claims Bonus (yrs)",lbl_accidents:"Accidents (last 5 yrs)",lbl_points:"Points / Convictions",
+    lbl_notes:"Additional Notes",
+    use_social:"Social / Domestic",use_commute:"Commuting",use_biz:"Business use",
+    use_courier:"Courier / Delivery",use_hr:"Hire & Reward",
+    cov_comp:"Comprehensive",cov_tpft:"Third Party Fire & Theft",cov_tpo:"Third Party Only",
+    acc_0:"None",acc_1:"1 accident",acc_2:"2 accidents",acc_3:"3+ accidents",
+    pts_0:"None",pts_9:"9+ / Conviction",
+    btn_copy:"Copy Quote Request to Clipboard",
+    copied_msg:"✅ Copied! Paste into the chat with Claude.",
+    ph_name:"e.g. John Smith",ph_address:"e.g. 12 High Road, London, N17 6RZ",
+    ph_occupation:"e.g. Courier, Driver, Builder",ph_make:"e.g. Ford",ph_model:"e.g. Transit",
+    ph_mileage:"e.g. 20000",ph_notes:"e.g. 1 fault accident in 2022, rear-end, £800 claim..."
+  },
+  pt: {
+    subtitle:"Pedido de Cotação de Seguro Auto",
+    tip:"<strong>💡 Dica:</strong> Tenha a carta de condução do cliente à mão — a maioria dos campos pode ser preenchida em segundos.",
+    sec_personal:"Dados Pessoais",
+    sec_vehicle:"Dados do Veículo",
+    sec_history:"Histórico de Condução",
+    lbl_name:"Nome Completo",lbl_dob:"Data de Nascimento",lbl_address:"Endereço Completo (com postcode)",
+    lbl_nationality:"Nacionalidade / Origem",lbl_occupation:"Ocupação Atual",
+    lbl_licdate:"Data de Emissão da Carta",lbl_loccountry:"País da Carta",lbl_lictype:"Tipo de Carta",
+    lbl_make:"Marca",lbl_model:"Modelo",lbl_year:"Ano",lbl_plate:"Matrícula",
+    lbl_use:"Uso do Veículo",lbl_cover:"Tipo de Cobertura",lbl_mileage:"Km Anuais Estimados",
+    lbl_ncb:"Anos Sem Sinistros (NCB)",lbl_accidents:"Acidentes (últimos 5 anos)",lbl_points:"Pontos / Condenações",
+    lbl_notes:"Notas Adicionais",
+    use_social:"Uso Pessoal / Social",use_commute:"Deslocações Casa-Trabalho",use_biz:"Uso Profissional",
+    use_courier:"Courier / Entrega",use_hr:"Hire & Reward",
+    cov_comp:"Cobertura Total",cov_tpft:"Terceiros, Fogo e Roubo",cov_tpo:"Terceiros Apenas",
+    acc_0:"Nenhum",acc_1:"1 acidente",acc_2:"2 acidentes",acc_3:"3+ acidentes",
+    pts_0:"Nenhum",pts_9:"9+ / Condenação",
+    btn_copy:"Copiar Pedido de Cotação",
+    copied_msg:"✅ Copiado! Cole no chat com o Claude.",
+    ph_name:"ex: João Silva",ph_address:"ex: 12 High Road, Londres, N17 6RZ",
+    ph_occupation:"ex: Courier, Motorista, Construtor",ph_make:"ex: Ford",ph_model:"ex: Transit",
+    ph_mileage:"ex: 20000",ph_notes:"ex: 1 acidente em 2022, colisão traseira, £800 de sinistro..."
+  },
+  es: {
+    subtitle:"Solicitud de Cotización de Seguro de Vehículo",
+    tip:"<strong>💡 Consejo:</strong> Tenga el carné de conducir del cliente a mano — la mayoría de los campos se pueden completar en segundos.",
+    sec_personal:"Datos Personales",
+    sec_vehicle:"Datos del Vehículo",
+    sec_history:"Historial de Conducción",
+    lbl_name:"Nombre Completo",lbl_dob:"Fecha de Nacimiento",lbl_address:"Dirección Completa (con postcode)",
+    lbl_nationality:"Nacionalidad / Origen",lbl_occupation:"Ocupación Actual",
+    lbl_licdate:"Fecha de Emisión del Carné",lbl_loccountry:"País del Carné",lbl_lictype:"Tipo de Carné",
+    lbl_make:"Marca",lbl_model:"Modelo",lbl_year:"Año",lbl_plate:"Matrícula",
+    lbl_use:"Uso del Vehículo",lbl_cover:"Tipo de Cobertura",lbl_mileage:"Km Anuales Estimados",
+    lbl_ncb:"Años Sin Siniestros (NCB)",lbl_accidents:"Accidentes (últimos 5 años)",lbl_points:"Puntos / Condenas",
+    lbl_notes:"Notas Adicionales",
+    use_social:"Uso Personal / Social",use_commute:"Desplazamiento al Trabajo",use_biz:"Uso Profesional",
+    use_courier:"Mensajería / Reparto",use_hr:"Hire & Reward",
+    cov_comp:"Cobertura Total",cov_tpft:"Terceros, Incendio y Robo",cov_tpo:"Solo Terceros",
+    acc_0:"Ninguno",acc_1:"1 accidente",acc_2:"2 accidentes",acc_3:"3+ accidentes",
+    pts_0:"Ninguno",pts_9:"9+ / Condena",
+    btn_copy:"Copiar Solicitud de Cotización",
+    copied_msg:"✅ ¡Copiado! Pégalo en el chat con Claude.",
+    ph_name:"ej: Juan García",ph_address:"ej: 12 High Road, Londres, N17 6RZ",
+    ph_occupation:"ej: Mensajero, Conductor, Albañil",ph_make:"ej: Ford",ph_model:"ej: Transit",
+    ph_mileage:"ej: 20000",ph_notes:"ej: 1 accidente en 2022, colisión trasera, £800 de siniestro..."
+  }
+};
+
+let lang = 'en';
+
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === l.toUpperCase()));
+  const t = T[l];
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (!t[key]) return;
+    if (el.tagName === 'OPTION') el.textContent = t[key];
+    else if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = t[key];
+    else el.innerHTML = t[key];
+  });
+  document.querySelectorAll('[data-ph]').forEach(el => {
+    const key = el.getAttribute('data-ph');
+    if (t[key]) el.placeholder = t[key];
+  });
+  document.documentElement.lang = l;
+}
+
+function v(id){ return document.getElementById(id).value || '—'; }
+
+function buildText(){
+  const t = T[lang];
+  return `INSURANCE QUOTE REQUEST — BEDA GROUP LTD
+
+━━━ 📋 ${(t.sec_personal||'PERSONAL DETAILS').toUpperCase()} ━━━
+• ${t.lbl_name||'Name'}: ${v('name')}
+• ${t.lbl_dob||'DOB'}: ${v('dob')}
+• ${t.lbl_address||'Address'}: ${v('address')}
+• ${t.lbl_nationality||'Nationality'}: ${v('nationality')}
+• ${t.lbl_occupation||'Occupation'}: ${v('occupation')}
+• ${t.lbl_licdate||'Licence date'}: ${v('licdate')}
+• ${t.lbl_loccountry||'Licence country'}: ${v('loccountry')}
+• ${t.lbl_lictype||'Licence type'}: ${v('lictype')}
+
+━━━ 🚗 ${(t.sec_vehicle||'VEHICLE').toUpperCase()} ━━━
+• Vehicle: ${v('year')} ${v('make')} ${v('model')}
+• ${t.lbl_plate||'Plate'}: ${v('plate')}
+• ${t.lbl_use||'Use'}: ${v('use')}
+• ${t.lbl_cover||'Cover'}: ${v('cover')}
+• ${t.lbl_mileage||'Mileage'}: ${v('mileage')}
+
+━━━ 📊 ${(t.sec_history||'DRIVING HISTORY').toUpperCase()} ━━━
+• ${t.lbl_ncb||'NCB'}: ${v('ncb')}
+• ${t.lbl_accidents||'Accidents'}: ${v('accidents')}
+• ${t.lbl_points||'Points'}: ${v('points')}
+• ${t.lbl_notes||'Notes'}: ${v('notes')||'None'}
+
+Please search the UK insurance market and return the best insurers, brokers or specialist schemes for this profile, any specialist courier/delivery programmes if relevant, risk flags, and tips to reduce the premium.`;
+}
+
+function copyToClipboard(){
+  if(!document.getElementById('address').value || !document.getElementById('make').value){
+    alert(lang==='pt'?'Por favor preencha pelo menos o endereço e o veículo.':lang==='es'?'Por favor complete al menos la dirección y el vehículo.':'Please fill in at least the full address and vehicle make/model.');
+    return;
+  }
+  navigator.clipboard.writeText(buildText()).then(()=>{
+    const el = document.getElementById('copied');
+    el.style.display='block';
+    el.textContent = T[lang].copied_msg;
+    setTimeout(()=>el.style.display='none',3500);
+  });
+}
+
+setLang('en');
+</script>
+</body>
+</html>
