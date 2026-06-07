@@ -134,6 +134,16 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
         </div>
         <div class="field"><label data-t="lbl_occupation"></label><input type="text" id="occupation" data-ph="ph_occupation"></div>
       </div>
+      <div class="row r2">
+        <div class="field">
+          <label data-t="lbl_ukborn"></label>
+          <select id="ukborn">
+            <option data-t="ukborn_yes" value="Born in UK"></option>
+            <option data-t="ukborn_no" value="Not born in UK"></option>
+          </select>
+        </div>
+        <div class="field"><label data-t="lbl_uksince"></label><input type="date" id="uksince" data-ph="ph_uksince"></div>
+      </div>
       <div class="row r3">
         <div class="field"><label data-t="lbl_licdate"></label><input type="date" id="licdate"></div>
         <div class="field">
@@ -269,6 +279,8 @@ const T = {
     cov_comp:"Comprehensive",cov_tpft:"Third Party Fire & Theft",cov_tpo:"Third Party Only",
     acc_0:"None",acc_1:"1 accident",acc_2:"2 accidents",acc_3:"3+ accidents",
     pts_0:"None",pts_9:"9+ / Conviction",
+    lbl_ukborn:"Born in UK?",ukborn_yes:"Yes — born in UK",ukborn_no:"No — born abroad",
+    lbl_uksince:"UK Resident Since",ph_uksince:"Leave blank if born in UK",
     btn_copy:"Copy Quote Request to Clipboard",
     copied_msg:"✅ Copied! Paste into the chat with Claude.",
     ph_name:"e.g. John Smith",ph_address:"e.g. 12 High Road, London, N17 6RZ",
@@ -293,6 +305,8 @@ const T = {
     cov_comp:"Cobertura Total",cov_tpft:"Terceiros, Fogo e Roubo",cov_tpo:"Terceiros Apenas",
     acc_0:"Nenhum",acc_1:"1 acidente",acc_2:"2 acidentes",acc_3:"3+ acidentes",
     pts_0:"Nenhum",pts_9:"9+ / Condenação",
+    lbl_ukborn:"Nasceu no UK?",ukborn_yes:"Sim — nasceu no UK",ukborn_no:"Não — nasceu no estrangeiro",
+    lbl_uksince:"Residente no UK desde",ph_uksince:"Deixar em branco se nasceu no UK",
     btn_copy:"Copiar Pedido de Cotação",
     copied_msg:"✅ Copiado! Cole no chat com o Claude.",
     ph_name:"ex: João Silva",ph_address:"ex: 12 High Road, Londres, N17 6RZ",
@@ -317,6 +331,8 @@ const T = {
     cov_comp:"Cobertura Total",cov_tpft:"Terceros, Incendio y Robo",cov_tpo:"Solo Terceros",
     acc_0:"Ninguno",acc_1:"1 accidente",acc_2:"2 accidentes",acc_3:"3+ accidentes",
     pts_0:"Ninguno",pts_9:"9+ / Condena",
+    lbl_ukborn:"¿Nacido en UK?",ukborn_yes:"Sí — nacido en UK",ukborn_no:"No — nacido en el extranjero",
+    lbl_uksince:"Residente en UK desde",ph_uksince:"Dejar en blanco si nació en UK",
     btn_copy:"Copiar Solicitud de Cotización",
     copied_msg:"✅ ¡Copiado! Pégalo en el chat con Claude.",
     ph_name:"ej: Juan García",ph_address:"ej: 12 High Road, Londres, N17 6RZ",
@@ -356,6 +372,8 @@ function buildText(){
 • ${t.lbl_dob||'DOB'}: ${v('dob')}
 • ${t.lbl_address||'Address'}: ${v('address')}
 • ${t.lbl_nationality||'Nationality'}: ${v('nationality')}
+• ${t.lbl_ukborn||'Born in UK'}: ${v('ukborn')}
+• ${t.lbl_uksince||'UK Resident Since'}: ${v('uksince')}
 • ${t.lbl_occupation||'Occupation'}: ${v('occupation')}
 • ${t.lbl_licdate||'Licence date'}: ${v('licdate')}
 • ${t.lbl_loccountry||'Licence country'}: ${v('loccountry')}
