@@ -169,7 +169,7 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
       <div class="row r3">
         <div class="field"><label data-t="lbl_make"></label><input type="text" id="make" data-ph="ph_make"></div>
         <div class="field"><label data-t="lbl_model"></label><input type="text" id="model" data-ph="ph_model"></div>
-        <div class="field"><label data-t="lbl_year"></label><input type="number" id="year" placeholder="2019" min="1990" max="2026"></div>
+        <div class="field"><label data-t="lbl_year"></label><input type="number" id="year" placeholder="2019" min="1990"></div>
       </div>
       <div class="row r2">
         <div class="field"><label data-t="lbl_plate"></label><input type="text" id="plate" placeholder="AB19 XYZ"></div>
@@ -391,6 +391,7 @@ function copyToClipboard(){
 }
 
 setLang('en');
+document.getElementById('year').max = new Date().getFullYear() + 1;
 </script>
 </body>
 </html>
