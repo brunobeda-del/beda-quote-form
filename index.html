@@ -249,11 +249,15 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
           </select>
         </div>
         <div class="field"><label data-t="lbl_nonmotconv"></label>
-          <select id="nonmotconv">
+          <select id="nonmotconv" onchange="toggleNonMotConv()">
             <option data-t="yn_no" value="No"></option>
             <option data-t="yn_yes" value="Yes"></option>
           </select>
         </div>
+      </div>
+      <div class="field" id="nonmotconv_detail" style="display:none">
+        <label data-t="lbl_nonmotconv_detail"></label>
+        <textarea id="nonmotconvdetail" rows="2" data-ph="ph_nonmotconv_detail"></textarea>
       </div>
     </div>
   </div>
@@ -529,6 +533,7 @@ const T = {
     lbl_loccountry:"Licence Country",lbl_lictype:"Licence Type",
     lbl_uklicnum:"UK Licence Number",ph_uklicnum:"e.g. SMITH751160JA9AB",
     lbl_medical:"Medical conditions (DVLA aware)?",lbl_nonmotconv:"Non-motoring convictions?",
+    lbl_nonmotconv_detail:"Conviction details (type, date, sentence)",ph_nonmotconv_detail:"e.g. Theft, Jan 2019, 6 months suspended sentence",
     lbl_make:"Make",lbl_model:"Model",lbl_year:"Year",lbl_plate:"Registration Plate",
     lbl_bodytype:"Body Type",body_van:"Van",body_car:"Car",body_minibus:"Minibus",body_pickup:"Pick-up",body_other:"Other",
     lbl_seats:"No. of Seats",lbl_value:"Estimated Value (£)",ph_value:"e.g. 8000",
@@ -578,6 +583,7 @@ const T = {
     lbl_loccountry:"País da Carta",lbl_lictype:"Tipo de Carta",
     lbl_uklicnum:"Nº da Carta UK",ph_uklicnum:"ex: SMITH751160JA9AB",
     lbl_medical:"Condições médicas (DVLA informada)?",lbl_nonmotconv:"Condenações não relacionadas com condução?",
+    lbl_nonmotconv_detail:"Detalhes da condenação (tipo, data, sentença)",ph_nonmotconv_detail:"ex: Furto, Jan 2019, 6 meses suspensa",
     lbl_make:"Marca",lbl_model:"Modelo",lbl_year:"Ano",lbl_plate:"Matrícula",
     lbl_bodytype:"Tipo de Carroçaria",body_van:"Carrinha",body_car:"Carro",body_minibus:"Minibus",body_pickup:"Pick-up",body_other:"Outro",
     lbl_seats:"Nº de Lugares",lbl_value:"Valor Estimado (£)",ph_value:"ex: 8000",
@@ -627,6 +633,7 @@ const T = {
     lbl_loccountry:"País del Carné",lbl_lictype:"Tipo de Carné",
     lbl_uklicnum:"Nº del Carné UK",ph_uklicnum:"ej: SMITH751160JA9AB",
     lbl_medical:"¿Condiciones médicas (DVLA informada)?",lbl_nonmotconv:"¿Condenas no relacionadas con conducción?",
+    lbl_nonmotconv_detail:"Detalles de la condena (tipo, fecha, sentencia)",ph_nonmotconv_detail:"ej: Hurto, Ene 2019, 6 meses en suspenso",
     lbl_make:"Marca",lbl_model:"Modelo",lbl_year:"Año",lbl_plate:"Matrícula",
     lbl_bodytype:"Tipo de Carrocería",body_van:"Furgoneta",body_car:"Coche",body_minibus:"Minibús",body_pickup:"Pick-up",body_other:"Otro",
     lbl_seats:"Nº de Asientos",lbl_value:"Valor Estimado (£)",ph_value:"ej: 8000",
@@ -680,6 +687,11 @@ function setLang(l) {
   document.documentElement.lang = l;
 }
 
+function toggleNonMotConv() {
+  const isYes = document.getElementById('nonmotconv').value === 'Yes';
+  document.getElementById('nonmotconv_detail').style.display = isYes ? 'flex' : 'none';
+}
+
 function toggleUKLicence() {
   const isUK = document.getElementById('loccountry').value === 'UK';
   document.getElementById('uklicnum_field').style.display = isUK ? 'flex' : 'none';
@@ -712,7 +724,7 @@ function buildText(){
 • Licence Held: ${v('licheldyrs')}
 • UK Licence Number: ${v('uklicnum')}
 • Medical Conditions (DVLA): ${v('medical')}
-• Non-Motoring Convictions: ${v('nonmotconv')}
+• Non-Motoring Convictions: ${v('nonmotconv')}${v('nonmotconv')==='Yes' ? ' — ' + v('nonmotconvdetail') : ''}
 
 🚗 VEHICLE DETAILS
 • Vehicle: ${v('year')} ${v('make')} ${v('model')}
@@ -773,6 +785,7 @@ function copyToClipboard(){
 setLang('en');
 document.getElementById('year').max = new Date().getFullYear() + 1;
 toggleUKLicence();
+toggleNonMotConv();
 </script>
 </body>
 </html>
