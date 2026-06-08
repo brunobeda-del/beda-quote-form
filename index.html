@@ -74,8 +74,20 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
 }
 .btn:hover{background:var(--gold2);}
 .btn:active{transform:scale(0.99);}
+.btn-submit{
+  width:100%;padding:13px;font-family:inherit;font-size:15px;font-weight:700;
+  color:#fff;background:#1a7f3c;border:none;border-radius:10px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:8px;transition:background 0.15s,transform 0.1s;
+  letter-spacing:0.01em;
+}
+.btn-submit:hover{background:#22a04c;}
+.btn-submit:active{transform:scale(0.99);}
+.btn-submit:disabled{background:#aaa;cursor:not-allowed;}
 
 .copied{text-align:center;font-size:13px;color:green;margin-top:8px;display:none;font-weight:600;}
+.submitted{text-align:center;font-size:13px;color:#1a7f3c;margin-top:8px;display:none;font-weight:600;}
+.submit-err{text-align:center;font-size:13px;color:#c0392b;margin-top:8px;display:none;font-weight:600;}
 .footer{text-align:center;font-size:11px;color:#aaa;margin-top:1.5rem;padding-bottom:1rem;}
 
 @media(max-width:480px){.r2,.r3{grid-template-columns:1fr;}.header-inner{flex-wrap:wrap;justify-content:center;}}
@@ -510,6 +522,12 @@ body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--
   </button>
   <p class="copied" id="copied" data-t="copied_msg"></p>
 
+  <button class="btn-submit" id="submitBtn" onclick="submitToEmail()">
+    📨 <span data-t="btn_submit"></span>
+  </button>
+  <p class="submitted" id="submitted" data-t="submitted_msg"></p>
+  <p class="submit-err" id="submit_err" data-t="submit_err_msg"></p>
+
   <div class="footer">Beda Group Ltd · Insurance Consultancy · London UK</div>
 </div>
 
@@ -561,6 +579,9 @@ const T = {
     yn_yes:"Yes",yn_no:"No",
     btn_copy:"Copy Quote Request to Clipboard",
     copied_msg:"✅ Copied! Paste into the chat with Claude.",
+    btn_submit:"Send Quote Request to Beda Group",
+    submitted_msg:"✅ Sent! Beda Group will be in touch shortly.",
+    submit_err_msg:"❌ Error sending. Please try again or copy the report.",
     ph_name:"e.g. John Smith",ph_address:"e.g. 12 High Road, London, N17 6RZ",
     ph_make:"e.g. Ford",ph_model:"e.g. Transit",ph_mileage:"e.g. 20000",
     ph_notes:"e.g. 1 fault accident in 2022, rear-end, £800 claim..."
@@ -611,6 +632,9 @@ const T = {
     yn_yes:"Sim",yn_no:"Não",
     btn_copy:"Copiar Pedido de Cotação",
     copied_msg:"✅ Copiado! Cole no chat com o Claude.",
+    btn_submit:"Enviar Pedido de Cotação para a Beda Group",
+    submitted_msg:"✅ Enviado! A Beda Group entrará em contacto em breve.",
+    submit_err_msg:"❌ Erro ao enviar. Tente novamente ou copie o relatório.",
     ph_name:"ex: João Silva",ph_address:"ex: 12 High Road, Londres, N17 6RZ",
     ph_make:"ex: Ford",ph_model:"ex: Transit",ph_mileage:"ex: 20000",
     ph_notes:"ex: 1 acidente em 2022, colisão traseira, £800 de sinistro..."
@@ -661,6 +685,9 @@ const T = {
     yn_yes:"Sí",yn_no:"No",
     btn_copy:"Copiar Solicitud de Cotización",
     copied_msg:"✅ ¡Copiado! Pégalo en el chat con Claude.",
+    btn_submit:"Enviar Solicitud de Cotización a Beda Group",
+    submitted_msg:"✅ ¡Enviado! Beda Group se pondrá en contacto pronto.",
+    submit_err_msg:"❌ Error al enviar. Inténtelo de nuevo o copie el informe.",
     ph_name:"ej: Juan García",ph_address:"ej: 12 High Road, Londres, N17 6RZ",
     ph_make:"ej: Ford",ph_model:"ej: Transit",ph_mileage:"ej: 20000",
     ph_notes:"ej: 1 accidente en 2022, colisión trasera, £800 de siniestro..."
@@ -780,6 +807,39 @@ function copyToClipboard(){
     el.textContent = T[lang].copied_msg;
     setTimeout(()=>el.style.display='none',3500);
   });
+}
+
+function submitToEmail(){
+  if(!document.getElementById('address').value || !document.getElementById('make').value){
+    alert(lang==='pt'?'Por favor preencha pelo menos o endereço e o veículo.':lang==='es'?'Por favor complete al menos la dirección y el vehículo.':'Please fill in at least the full address and vehicle make/model.');
+    return;
+  }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.querySelector('span').textContent = lang==='pt'?'A enviar...':lang==='es'?'Enviando...':'Sending...';
+
+  const data = new FormData();
+  data.append('_subject', 'New Insurance Quote Request — ' + v('name'));
+  data.append('Quote Request', buildText());
+  data.append('_replyto', '');
+
+  fetch('https://formspree.io/f/mvznakbl', {method:'POST', body:data, headers:{Accept:'application/json'}})
+    .then(r => {
+      if(r.ok){
+        document.getElementById('submitted').style.display='block';
+        document.getElementById('submit_err').style.display='none';
+        btn.disabled = false;
+        setLang(lang);
+      } else {
+        throw new Error('failed');
+      }
+    })
+    .catch(()=>{
+      document.getElementById('submit_err').style.display='block';
+      document.getElementById('submitted').style.display='none';
+      btn.disabled = false;
+      setLang(lang);
+    });
 }
 
 setLang('en');
